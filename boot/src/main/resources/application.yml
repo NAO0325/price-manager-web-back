@@ -1,0 +1,47 @@
+server:
+  port: 9090
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  application:
+    name: price-manager-web-back
+  datasource:
+    url: jdbc:h2:~/pricedb;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+  h2:
+    console.enabled: true
+  jpa:
+    show-sql: false
+    open-in-view: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format-sql: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:init.sql
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+  packages-to-scan: com.price.manager.back.driving.controllers
+  paths-to-match: /api/**
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
