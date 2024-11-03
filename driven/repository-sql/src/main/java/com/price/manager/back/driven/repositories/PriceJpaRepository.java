@@ -13,9 +13,6 @@ import java.util.Optional;
 @Repository
 public interface PriceJpaRepository extends JpaRepository<PriceEntity, Long> {
 
-    @Query("SELECT p FROM PriceEntity p WHERE p.priceList = ?1 ")
-    Optional<PriceEntity> findByPriceList(Long priceList);
-
     @Query("SELECT p FROM PriceEntity p WHERE p.brandId = ?1 AND p.productId = ?2 AND p.startDate <= ?3 AND p.endDate >= ?3 ORDER BY p.priority DESC, p.priceList DESC")
     Optional<List<PriceEntity>> findAllByBrandIdAndProductIdBetweenDates(Long brandId, Long productId, LocalDateTime dateBetween);
 }

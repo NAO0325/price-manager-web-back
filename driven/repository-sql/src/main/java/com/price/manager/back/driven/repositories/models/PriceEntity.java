@@ -1,18 +1,17 @@
 package com.price.manager.back.driven.repositories.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@Builder
 @Table(name = "PRICES")
-@Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PriceEntity implements Serializable {
 
   @Id

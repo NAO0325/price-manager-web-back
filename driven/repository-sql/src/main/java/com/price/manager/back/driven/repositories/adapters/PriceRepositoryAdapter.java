@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,8 +23,8 @@ public class PriceRepositoryAdapter implements PriceRepositoryPort {
     @Override
     public List<Price> findAllByBrandIdAndProductIdBetweenDates(Long brandId, Long productId, LocalDateTime dateBetween) {
         return repository.findAllByBrandIdAndProductIdBetweenDates(brandId, productId, dateBetween)
-                .orElseGet(ArrayList::new)
                 .stream()
+                .flatMap(List::stream)
                 .map(mapper::toDomain)
                 .toList();
     }
