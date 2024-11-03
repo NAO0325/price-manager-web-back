@@ -21,14 +21,14 @@ java -jar boot/target/price-manager-web-back-boot-1.0.0.jar
 
 Accede a la interfaz de Swagger en el siguiente enlace:
 
-http://localhost:9090/swagger-ui/index.html
+* http://localhost:9090/swagger-ui/index.html
 
 ### Pruebas
 
 Recomendamos utilizar Postman importando la colección desde este enlace: 
 
-***https://github.com/NAO2503/spring-catalogue-gft/blob/main/src/main/resources/Catalogue.postman_collection_V2.json***
+* ***https://github.com/NAO0325/price-manager-web-back/blob/main/src/main/resources/Catalogue.postman_collection_V2.json***
 
 ### Ejemplo de petición <font color="green">GET</font>:
 
-http://localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14%2010:00:00&productId=35455&brandId=1
+* http://localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14%2010:00:00&productId=35455&brandId=1

@@ -18,10 +18,10 @@ public class DateUtil {
     }
 
     /**
-     * Determina el formato de una fecha
+     * Converts a string date to LocalDateTime using pattern matching.
      *
-     * @param date Recibe la fecha como cadena
-     * @return formato
+     * @param date the date string to parse
+     * @return Optional<LocalDateTime> containing the parsed date or empty if invalid/null
      */
     public static String determineDateFormat(String date) {
         return DATE_FORMAT_REGEXPS.entrySet()
@@ -33,10 +33,11 @@ public class DateUtil {
     }
 
     /**
-     * Determina una fecha a partir de una cadena
+     * Attempts to parse a date string using the given format.
      *
-     * @param date Recibe la fecha como cadena
-     * @return Date
+     * @param date the date string to parse
+     * @return LocalDateTime parsed from the string
+     * @throws DateTimeParseException if parsing fails return null
      */
     public static LocalDateTime getDateFromString(String date) {
         if (!StringUtils.hasText(date)) {
