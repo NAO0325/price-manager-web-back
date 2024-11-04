@@ -2,7 +2,6 @@ package com.price.manager.back.application.utils;
 
 import com.price.manager.back.domain.Price;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PriceDomainMocks {

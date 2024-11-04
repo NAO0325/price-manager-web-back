@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Component
 @Mapper(componentModel = "spring")
@@ -18,8 +17,6 @@ public interface PriceMapper {
     @Mapping(target = "startDate", expression = "java(mapDateToString(price.getStartDate()))")
     @Mapping(target = "endDate", expression = "java(mapDateToString(price.getEndDate()))")
     PriceResponse toResponseDto(Price price);
-
-    List<PriceResponse> listToResponseDtoList(List<Price> prices);
 
     default String mapDateToString(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
