@@ -58,7 +58,7 @@ Accede a la interfaz de Swagger en el siguiente enlace:
 
 Recomendamos utilizar Postman importando la colección desde este enlace: 
 
-* [Catalogue.postman_collection_V2.json](https://github.com/NAO0325/price-manager-web-back/blob/main/src/main/resources/Catalogue.postman_collection_V2.json)
+* [Catalogue.postman_collection_V2.json](https://github.com/NAO0325/price-manager-web-back/blob/main/boot/src/main/resources/Catalogue.postman_collection_V2.json)
 
 ### Ejemplo de petición <font color="green">GET</font>
 
