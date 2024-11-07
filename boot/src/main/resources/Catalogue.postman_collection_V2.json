@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a8235c47-f4d7-4168-8333-39b265ef42da",
+		"_postman_id": "71f47b1c-e459-4782-85c0-dcbd6c3cb333",
 		"name": "Catalogue",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9844576"
@@ -30,7 +30,8 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"tests[\"End Date OK\"] = jsonData.endDate === \"2020-12-31 23:59:59\";"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -43,7 +44,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14 10:00:00&productId=35455&brandId=1",
+					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14T10:00:00&productId=35455&brandId=1",
 					"host": [
 						"localhost"
 					],
@@ -57,7 +58,7 @@
 					"query": [
 						{
 							"key": "dateQuery",
-							"value": "2020-06-14 10:00:00"
+							"value": "2020-06-14T10:00:00"
 						},
 						{
 							"key": "productId",
@@ -97,7 +98,8 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"tests[\"End Date OK\"] = jsonData.endDate === \"2020-06-14 18:30:00\";"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -110,7 +112,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14 16:00:00&productId=35455&brandId=1",
+					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14T16:00:00&productId=35455&brandId=1",
 					"host": [
 						"localhost"
 					],
@@ -124,7 +126,7 @@
 					"query": [
 						{
 							"key": "dateQuery",
-							"value": "2020-06-14 16:00:00"
+							"value": "2020-06-14T16:00:00"
 						},
 						{
 							"key": "productId",
@@ -164,7 +166,8 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"tests[\"End Date OK\"] = jsonData.endDate === \"2020-12-31 23:59:59\";"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -177,7 +180,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14 21:00:00&productId=35455&brandId=1",
+					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14T21:00:00&productId=35455&brandId=1",
 					"host": [
 						"localhost"
 					],
@@ -191,7 +194,7 @@
 					"query": [
 						{
 							"key": "dateQuery",
-							"value": "2020-06-14 21:00:00"
+							"value": "2020-06-14T21:00:00"
 						},
 						{
 							"key": "productId",
@@ -231,7 +234,8 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"tests[\"End Date OK\"] = jsonData.endDate === \"2020-06-15 11:00:00\";"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -244,7 +248,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-15 10:00:00&productId=35455&brandId=1",
+					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-15T10:00:00&productId=35455&brandId=1",
 					"host": [
 						"localhost"
 					],
@@ -258,7 +262,7 @@
 					"query": [
 						{
 							"key": "dateQuery",
-							"value": "2020-06-15 10:00:00"
+							"value": "2020-06-15T10:00:00"
 						},
 						{
 							"key": "productId",
@@ -298,7 +302,8 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"tests[\"End Date OK\"] = jsonData.endDate === \"2020-12-31 23:59:59\";"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -311,7 +316,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-16 21:00:00&productId=35455&brandId=1",
+					"raw": "localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-16T21:00:00&productId=35455&brandId=1",
 					"host": [
 						"localhost"
 					],
@@ -325,7 +330,7 @@
 					"query": [
 						{
 							"key": "dateQuery",
-							"value": "2020-06-16 21:00:00"
+							"value": "2020-06-16T21:00:00"
 						},
 						{
 							"key": "productId",

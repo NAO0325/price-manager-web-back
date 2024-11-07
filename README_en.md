@@ -62,7 +62,7 @@ We recommend using Postman by importing the collection from this link:
 
 ### Example <font color="green">GET</font> Request
 
-* http://localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14%2010:00:00&productId=35455&brandId=1
+* http://localhost:9090/api/catalogue/price/findByBrandProductBetweenDate?dateQuery=2020-06-14T10:00:00&productId=35455&brandId=1
 
 ![alt text](images/postman.png)
 

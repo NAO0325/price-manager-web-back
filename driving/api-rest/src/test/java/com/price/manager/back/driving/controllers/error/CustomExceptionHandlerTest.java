@@ -1,91 +1,128 @@
 package com.price.manager.back.driving.controllers.error;
 
-import org.junit.jupiter.api.BeforeEach;
+
+import com.price.manager.back.application.exceptions.PriceNotFoundException;
+import com.price.manager.back.application.ports.driving.PriceServicePort;
+import com.price.manager.back.driving.controllers.adapters.PriceControllerAdapter;
+import com.price.manager.back.driving.controllers.mappers.PriceMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.HandlerMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
+
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest({PriceControllerAdapter.class, CustomExceptionHandler.class})
+@ContextConfiguration(classes = {PriceControllerAdapter.class, CustomExceptionHandler.class})
 class CustomExceptionHandlerTest {
 
-    @InjectMocks
-    private CustomExceptionHandler exceptionHandler;
+    @Autowired
+    private MockMvc mvc;
 
-    @Mock
-    private WebRequest webRequest;
+    @MockBean
+    private PriceServicePort priceServicePort;
 
-    @Mock
-    private HandlerMethod handlerMethod;
-
-    private Method method;
+    @MockBean
+    private PriceMapper mapper;
 
 
-    @RestController
-    static class PriceControllerAdapter {
-        public void testMethod() {
-        }
-    }
-
-    @BeforeEach
-    void setUp() {
-        try {
-            method = PriceControllerAdapter.class.getDeclaredMethod("testMethod");
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    void whenMissingRequiredParameter_thenReturns400() throws Exception {
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("productId", "35455")
+                        .param("brandId", "1"))  // dateQuery parameter is missing
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Missing Required Parameter"))
+                .andExpect(jsonPath("$.message").value("Required parameter 'dateQuery' of type 'LocalDateTime' is missing"));
     }
 
     @Test
-    void handleAllExceptions_ShouldReturnInternalServerError() {
-        // Arrange
-        var errorMessage = "Test error message";
-        var exception = new Exception(errorMessage);
-
-        // Act
-        when(handlerMethod.getMethod()).thenReturn(method);
-        var responseEntity = exceptionHandler.handleAllExceptions(
-                exception, handlerMethod, webRequest);
-        var errorResponse = responseEntity.getBody();
-
-        // Assert
-        assertNotNull(responseEntity);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertNotNull(errorResponse);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorResponse.getStatus());
-        assertEquals(PriceControllerAdapter.class.getName(), errorResponse.getError());
-        assertEquals(errorMessage, errorResponse.getMessage());
-
-        // Verify mock interactions
-        verify(handlerMethod, times(1)).getMethod();
+    void whenInvalidDateFormat_thenReturns400() throws Exception {
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("dateQuery", "2020-10-10")
+                        .param("productId", "35455")
+                        .param("brandId", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Parameter Type Mismatch"))
+                .andExpect(jsonPath("$.message").value("Invalid format for parameter 'dateQuery': The value '2020-10-10' is not valid"));
     }
 
     @Test
-    void handleFormat_ShouldReturnBadRequest() {
-        // Arrange
-        var errorMessage = "Invalid number format";
-        var exception = new NumberFormatException(errorMessage);
+    void whenInvalidProductId_thenReturns400() throws Exception {
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("dateQuery", "2020-06-14T10:00:00")
+                        .param("productId", "invalid-product")
+                        .param("brandId", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Parameter Type Mismatch"))
+                .andExpect(jsonPath("$.message").value("Invalid format for parameter 'productId': The value 'invalid-product' is not valid"));
+    }
 
-        // Act
-        var responseEntity = exceptionHandler.handleFormat(exception, webRequest);
-        var errorResponse = responseEntity.getBody();
+    @Test
+    void whenInvalidBrandId_thenReturns400() throws Exception {
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("dateQuery", "2020-06-14T10:00:00")
+                        .param("productId", "35455")
+                        .param("brandId", "invalid-brand"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Parameter Type Mismatch"))
+                .andExpect(jsonPath("$.message").value("Invalid format for parameter 'brandId': The value 'invalid-brand' is not valid"));
+    }
 
-        // Assert
-        assertNotNull(responseEntity);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertNotNull(errorResponse);
-        assertEquals(HttpStatus.BAD_REQUEST.value(), errorResponse.getStatus());
-        assertEquals("Invalid format error", errorResponse.getError());
-        assertEquals(errorMessage, errorMessage);
+    @Test
+    void whenPriceNotFound_thenReturns404() throws Exception {
+        var dateTest = LocalDateTime.of(2020,6,14, 10, 0, 0);
+
+        willThrow(new PriceNotFoundException(1L, 35455L, dateTest))
+                .given(priceServicePort).findByBrandProductBetweenDate(anyLong(), anyLong(), any());
+
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("dateQuery", "2020-06-14T10:00:00")
+                        .param("productId", "35455")
+                        .param("brandId", "1"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Price Not Found"))
+                .andExpect(jsonPath("$.message").value("Price not found for brand ID: 1, product ID: 35455, date: 2020-06-14T10:00"));
+    }
+
+    @Test
+    void whenUnexpectedError_thenReturns500() throws Exception {
+        when(priceServicePort.findByBrandProductBetweenDate(anyLong(), anyLong(), any()))
+                .thenThrow(new RuntimeException("Unexpected error"));
+
+        mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("dateQuery", "2020-06-14T10:00:00")
+                        .param("productId", "35455")
+                        .param("brandId", "1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                .andExpect(jsonPath("$.message").value("An unexpected error occurred"));
     }
 }

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +37,7 @@ class OpenApiConfigTest {
         assertNotNull(result.getInfo(), "API Info should not be null");
         assertEquals("Price Manager API", result.getInfo().getTitle(),
                 "API title should match expected value");
-        assertEquals("1.0", result.getInfo().getVersion(),
+        assertEquals("1.0.0", result.getInfo().getVersion(),
                 "API version should match expected value");
         assertEquals("Price Management System API Documentation",
                 result.getInfo().getDescription(),

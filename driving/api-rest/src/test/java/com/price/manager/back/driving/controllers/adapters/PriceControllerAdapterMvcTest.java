@@ -1,32 +1,29 @@
 package com.price.manager.back.driving.controllers.adapters;
 
+import com.price.manager.back.application.exceptions.PriceNotFoundException;
 import com.price.manager.back.application.ports.driving.PriceServicePort;
 import com.price.manager.back.domain.Price;
+import com.price.manager.back.driving.controllers.error.CustomExceptionHandler;
 import com.price.manager.back.driving.controllers.mappers.PriceMapper;
 import com.price.manager.back.driving.controllers.models.PriceResponse;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
 @WebMvcTest(PriceControllerAdapter.class)
-@ContextConfiguration(classes = {PriceControllerAdapter.class})
+@ContextConfiguration(classes = {PriceControllerAdapter.class, CustomExceptionHandler.class})
 public class PriceControllerAdapterMvcTest {
 
     @Autowired
@@ -39,49 +36,39 @@ public class PriceControllerAdapterMvcTest {
     private PriceServicePort priceServicePort;
 
     @Test
-    void returnGetMvcPriceDataOK() throws Exception {
-
-        // when
-        when(priceServicePort.findByBrandProductBetweenDate(anyString(), anyString(), anyString()))
-                .thenReturn(Price.builder().startDate(LocalDateTime.now()).build());
-
+    void whenValidInput_thenReturns200() throws Exception {
+        // Given
+        when(priceServicePort.findByBrandProductBetweenDate(anyLong(), anyLong(), any()))
+                .thenReturn(Price.builder().build());
         when(priceMapper.toResponseDto(any()))
                 .thenReturn(PriceResponse.builder().build());
 
-        // then
+        // When & Then
         mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("dateQuery", "2020-06-14")
+                        .param("dateQuery", "2020-06-14T10:00:00")
                         .param("productId", "35455")
                         .param("brandId", "1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        verify(priceMapper, times(1)).toResponseDto(any());
-        verify(priceServicePort, times(1)).findByBrandProductBetweenDate(anyString(), anyString(), anyString());
-
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
+
 
     @Test
-    void returnGetMvcPriceDataNotFound() throws Exception {
+    void whenPriceNotFound_thenReturns404() throws Exception {
+        // Given
+        var dateTest = LocalDateTime.of(2020,6,14, 10, 0, 0);
 
-        // when
-        when(priceServicePort.findByBrandProductBetweenDate(anyString(), anyString(), anyString()))
-                .thenReturn(null);
+        willThrow(new PriceNotFoundException(1L, 35455L, dateTest))
+                .given(priceServicePort).findByBrandProductBetweenDate(anyLong(), anyLong(), any());
 
-        when(priceMapper.toResponseDto(any()))
-                .thenReturn(null);
-
-        // then
+        // When & Then
         mvc.perform(get("/api/catalogue/price/findByBrandProductBetweenDate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("dateQuery", "2020-06-14")
+                        .param("dateQuery", "2020-06-14T10:00:00")
                         .param("productId", "35455")
-                        .param("brandId", "5"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-
-        verify(priceMapper, times(1)).toResponseDto(any());
-        verify(priceServicePort, times(1)).findByBrandProductBetweenDate(anyString(), anyString(), anyString());
-
+                        .param("brandId", "1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Price Not Found"))
+                .andExpect(jsonPath("$.message").value("Price not found for brand ID: 1, product ID: 35455, date: 2020-06-14T10:00"));
     }
-
 }

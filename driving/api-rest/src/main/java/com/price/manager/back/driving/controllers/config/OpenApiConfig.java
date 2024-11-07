@@ -20,7 +20,7 @@ public class OpenApiConfig {
                 .addServersItem(new Server().url("http://localhost:" + serverPort))
                 .info(new Info()
                         .title("Price Manager API")
-                        .version("1.0")
+                        .version("1.0.0")
                         .description("Price Management System API Documentation")
                         .contact(new Contact()
                                 .name("Napoleon Avila Ochoa")
