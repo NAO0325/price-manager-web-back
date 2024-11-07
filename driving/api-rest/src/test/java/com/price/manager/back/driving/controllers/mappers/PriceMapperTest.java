@@ -30,8 +30,8 @@ class PriceMapperTest {
     @Test
     void toResponseDto() {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        var start = LocalDateTime.of(2022, 1, 1, 1, 30, 59);
-        var end = LocalDateTime.of(2022,1,31,1,30,59);
+        var start = LocalDateTime.of(2020, 6, 14, 15, 0, 0);
+        var end = LocalDateTime.of(2020,6,14,18,30,0);
         var price = mocks.createPrice();
         var priceResponse = priceMapper.toResponseDto(price);
         assertNotNull(priceResponse);
